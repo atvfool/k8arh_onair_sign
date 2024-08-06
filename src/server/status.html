@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title>On Air Sign Status</title>
+        <style>
+            html {
+              text-align: center;
+              font-size: 16px;
+            }
+            div {
+              padding: 1rem;
+            }
+            #input {
+              font-size: 16px;
+            }
+            p {
+                font-size: 16px;
+            }
+          </style>
+    </head>
+    <body>
+        <h1>Sign Status</h1>
+        <button onclick="toggle()">toggle</button>
+        <pre id="signStatus"></pre>
+    </body>
+    <script>
+        var output = document.getElementById("signStatus");
+        var socket = new WebSocket("ws://localhost:8080/toggle");
+    
+        socket.onopen = function () {
+          output.innerHTML += "Status: Connected\n";
+        };
+    
+        socket.onmessage = function (e) {
+          output.innerHTML = "Status: Connected\nServer: " + e.data + "\n";
+        };
+    
+        function toggle() {
+          socket.send("toggle");
+        }
+      </script>
+</html>
