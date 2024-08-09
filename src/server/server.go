@@ -54,8 +54,14 @@ func main() {
 		defer conn.Close()
 
 		for {
-			stat := fmt.Sprintf("%v", status)
-			err = conn.WriteMessage(0, []byte(stat))
+			mt, _, err := conn.ReadMessage()
+			if err != nil {
+				log.Println("read failed:", err)
+				break
+			}
+			stat := []byte(fmt.Sprintf("%v", status))
+
+			err = conn.WriteMessage(mt, stat)
 			if err != nil {
 				log.Println("write failed:", err)
 				break
@@ -63,12 +69,12 @@ func main() {
 		}
 	})
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "status.html")
-	})
-
 	http.HandleFunc("/sign", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "sign.html")
+	})
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "status.html")
 	})
 
 	http.ListenAndServe(":8080", nil)

@@ -2,7 +2,7 @@
     <head>
         <style>
             html{
-                background-color: red;
+                background-color: black;
                 color:white;
                 font-size: 25vw;
             }
@@ -13,21 +13,48 @@
     </head>
     <body>
         <div class="text">
-            ON-AIR
+            OFF-AIR
         </div>
     </body>
     <script>
         var output = document.getElementsByClassName("text")[0];
+        var htmlcss = document.querySelector('html');
         var socket = new WebSocket("ws://localhost:8080/getstatus");
-    
+        var onairStatus = false;
+        var prevStatus = onairStatus;
+
+
+        function ping(){
+            socket.send("");
+        }
+        
+        function changeStatus(){ 
+            if(onairStatus){
+                htmlcss.style.backgroundColor = 'red';
+                output.innerHTML = "ON-AIR";
+            }else{
+                htmlcss.style.backgroundColor = 'black';
+                output.innerHTML = "OFF-AIR";
+            }
+            
+
+        }
+
         socket.onopen = function () {
-          output.innerHTML += "Status: Connected\n";
+            console.log("Status: Connected");
+            setInterval(ping, 45000);
         };
     
         socket.onmessage = function (e) {
-            console.log(e);
-          output.innerHTML = "Status: Connected\nServer: " + e.data + "\n";
+            onairStatus = e.data ==="true" ? true:false;
+            console.log("On Air Status", onairStatus);
+            console.log("Server", e);
+            
+            if(prevStatus != onairStatus) { // status changed
+                prevStatus = onairStatus;
+                changeStatus();
+            }
+
         };
-    
       </script>
 </html>
