@@ -67,5 +67,9 @@ func main() {
 		http.ServeFile(w, r, "status.html")
 	})
 
+	http.HandleFunc("/sign", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "sign.html")
+	})
+
 	http.ListenAndServe(":8080", nil)
 }

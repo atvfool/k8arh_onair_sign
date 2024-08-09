@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <style>
+            html{
+                background-color: red;
+                color:white;
+                font-size: 25vw;
+            }
+            .text{
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="text">
+            ON-AIR
+        </div>
+    </body>
+    <script>
+        var output = document.getElementsByClassName("text")[0];
+        var socket = new WebSocket("ws://localhost:8080/getstatus");
+    
+        socket.onopen = function () {
+          output.innerHTML += "Status: Connected\n";
+        };
+    
+        socket.onmessage = function (e) {
+            console.log(e);
+          output.innerHTML = "Status: Connected\nServer: " + e.data + "\n";
+        };
+    
+      </script>
+</html>
