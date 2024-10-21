@@ -12,7 +12,6 @@ var upgrader = websocket.Upgrader{}
 var status = false
 
 func main() {
-
 	http.HandleFunc("/toggle", func(w http.ResponseWriter, r *http.Request) {
 		// Upgrade upgrades the HTTP server connection to the WebSocket protocol.
 		conn, err := upgrader.Upgrade(w, r, nil)
@@ -76,6 +75,9 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "status.html")
 	})
+    log.Println("Server Listening on port 8123")
 
-	http.ListenAndServe(":8080", nil)
+    if err := http.ListenAndServe(":8123", nil); err != nil {
+        log.Fatal("ListenAndServe: ", err)
+    } 
 }
